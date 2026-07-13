@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <!-- 모바일 디바이스 최적화를 위한 뷰포트 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>하태환 | I AM BRANDING</title>
+
+    <!-- [1] Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f4f6f4',
+                            100: '#e3e8e2',
+                            200: '#c7d1c5',
+                            300: '#a3b39f',
+                            400: '#7c9277',
+                            500: '#647a60', /* 소프트 올리브(세이지) 메인 컬러 */
+                            600: '#4e614a',
+                            700: '#3f4f3c',
+                            800: '#334031',
+                            900: '#2c372a',
+                        },
+                        warmgray: {
+                            50: '#FAF9F6',  /* 따뜻한 메인 웜 그레이 배경 */
+                            100: '#F2F1ED',
+                            200: '#EAE8E4',
+                            300: '#DDD9D3',
+                            800: '#2B2A27',  /* 다크모드 카드 배경 */
+                            900: '#1C1B19',  /* 다크모드 메인 배경 */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- [2] 프리텐다드 폰트 & Lucide 아이콘 라이브러리 로드 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- [3] 분리된 전용 외부 CSS 연결 -->
+    <link rel="stylesheet" href="index.css">
+
+    <!-- [4] 안전하게 뒤늦게 로드되는 전용 JS 연결 -->
+    <script src="index.js" defer></script>
+</head>
+<body class="bg-warmgray-50 text-slate-800 dark:bg-warmgray-900 dark:text-slate-100 min-h-screen relative overflow-x-hidden antialiased">
+
+    <!-- 1. 상단 스크롤 인디케이터 (진행률 표시 바) -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-warmgray-200 dark:bg-warmgray-800 z-50">
+        <div id="scroll-bar" class="h-full bg-brand-500 w-0 transition-all duration-75"></div>
+    </div>
+
+    <!-- 2. 네비게이션 바 (모바일 터치 헤더 최적화) -->
+    <nav class="fixed top-1 left-0 w-full bg-warmgray-50/80 dark:bg-warmgray-900/80 backdrop-blur-md border-b border-warmgray-200 dark:border-warmgray-800 z-40 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <!-- 로고 / 브랜드 로고타입 -->
+            <a href="#" class="text-base sm:text-lg font-bold text-brand-600 dark:text-brand-400 flex items-center gap-2 tracking-tight">
+                <span class="w-2.5 h-2.5 bg-brand-500 rounded-full"></span> HA TAE HWAN
+            </a>
+
+            <!-- 데스크탑 전용 메뉴 -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#about" class="hover:text-brand-500 dark:hover:text-brand-400 transition">소개</a>
+                <a href="#strengths" class="hover:text-brand-500 dark:hover:text-brand-400 transition">플레이 그라운드</a>
+                <a href="#interactive" class="hover:text-brand-500 dark:hover:text-brand-400 transition">게임 & 방명록</a>
+            </div>
+
+            <!-- 유틸리티 메뉴 영역 -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- 다크모드 토글 버튼 (모바일 터치 타겟 44px 확보) -->
+                <button id="theme-toggle" class="p-3 rounded-xl bg-warmgray-100 dark:bg-warmgray-800 hover:bg-warmgray-200 dark:hover:bg-warmgray-700 transition" aria-label="테마 변경">
+                    <i id="theme-icon" data-lucide="sun" class="w-5 h-5 text-brand-500 dark:text-brand-300"></i>
+                </button>
+
+                <!-- 모바일 메뉴 삼선 버튼 (모바일 전용 터치 타겟 44px 확보) -->
+                <button id="menu-toggle" class="md:hidden p-3 rounded-xl bg-warmgray-100 dark:bg-warmgray-800 active:scale-95 transition" aria-label="메뉴 열기">
+                    <i data-lucide="menu" class="w-5 h-5 text-slate-700 dark:text-slate-300"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 모바일 드롭다운 아코디언 메뉴 (모바일 전용) -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-warmgray-200 dark:border-warmgray-800 bg-warmgray-50/95 dark:bg-warmgray-900/95 backdrop-blur-md px-6 py-4 flex flex-col gap-4 shadow-inner">
+            <a href="#about" class="mobile-link text-base font-semibold py-2 text-slate-700 dark:text-slate-300 hover:text-brand-500 transition">소개</a>
+            <a href="#strengths" class="mobile-link text-base font-semibold py-2 text-slate-700 dark:text-slate-300 hover:text-brand-500 transition">플레이 그라운드</a>
+            <a href="#interactive" class="mobile-link text-base font-semibold py-2 text-slate-700 dark:text-slate-300 hover:text-brand-500 transition">게임 & 방명록</a>
+        </div>
+    </nav>
+
+    <!-- 3. 메인 히어로 섹션 (모바일에서 여백과 폰트 크기 가변) -->
+    <section class="min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 pt-24 pb-16 relative overflow-hidden bg-gradient-to-b from-brand-50/40 via-transparent to-transparent dark:from-brand-900/10">
+        <!-- 공간 디자인 데코 요소 -->
+        <div class="absolute -top-12 -right-12 w-64 h-64 sm:w-96 sm:h-96 bg-brand-100/40 dark:bg-brand-900/10 rounded-full filter blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-24 -left-24 w-60 h-60 sm:w-80 sm:h-80 bg-brand-200/20 dark:bg-brand-800/10 rounded-full filter blur-3xl pointer-events-none"></div>
+
+        <div class="text-center max-w-4xl z-10 space-y-6 sm:space-y-8 px-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-100 dark:bg-brand-800/60 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-700">
+                🌱 하태환의 라이프스타일 포트폴리오
+            </div>
+            
+            <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-snug sm:leading-tight text-slate-900 dark:text-white max-w-3xl mx-auto">
+                경계를 넘나들며<br>
+                <span class="bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text text-transparent dark:from-brand-400 dark:to-brand-200">에너지를 채우는 법</span>
+            </h1>
+
+            <div class="w-12 sm:w-16 h-1 bg-brand-400 mx-auto rounded-full"></div>
+
+            <p class="text-sm sm:text-base md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto font-medium px-2">
+                "땀방울이 맺히는 코트에서, 건반이 울리는 무대로, 그리고 승리가 깃드는 협곡으로 — 삶의 모든 순간을 플레이하듯 몰입합니다."
+            </p>
+
+            <div class="pt-4 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4">
+                <a href="#about" class="px-5 py-3 sm:px-6 sm:py-3.5 bg-brand-500 hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 text-white rounded-2xl shadow-lg shadow-brand-500/10 font-semibold text-sm transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    태환 알아보기 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+                <a href="#interactive" class="px-5 py-3 sm:px-6 sm:py-3.5 bg-white dark:bg-warmgray-800 border border-warmgray-300 dark:border-warmgray-700 hover:bg-warmgray-100 dark:hover:bg-warmgray-700 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    밸런스 게임 참여 <i data-lucide="gamepad-2" class="w-4 h-4 text-brand-500"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden sm:block">
+            <a href="#about" aria-label="아래로 스크롤">
+                <i data-lucide="chevron-down" class="w-6 h-6 text-brand-400"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 4. 소개 (About) 및 시너지 선순환 비결 섹션 -->
+    <section id="about" class="py-16 sm:py-24 max-w-5xl mx-auto px-4 sm:px-6 reveal">
+        <div class="text-center mb-12 sm:text-left sm:mb-16">
+            <h2 class="text-[11px] font-bold tracking-widest text-brand-500 uppercase">PROFILE</h2>
+            <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">일상을 가꾸는 온도</p>
+            <div class="w-8 h-1 bg-brand-400 mx-auto sm:mx-0 mt-3 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-center">
+            <!-- 프로필 카드 (좌) -->
+            <div class="md:col-span-5 relative group w-full max-w-sm mx-auto md:max-w-none">
+                <div class="absolute -inset-1 bg-gradient-to-r from-brand-400 to-brand-200 dark:from-brand-600 dark:to-brand-800 rounded-3xl blur opacity-20 group-hover:opacity-35 transition duration-1000"></div>
+                <div class="relative bg-white dark:bg-warmgray-800 p-6 sm:p-8 rounded-3xl shadow-lg flex flex-col items-center text-center">
+                    
+                    <!-- 실제 사진으로 대체하고 싶을 때 src="profile.jpg" 형식으로 넣어주시면 대체됩니다. -->
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center text-brand-600 dark:text-brand-300 mb-4 sm:mb-6 overflow-hidden">
+                        <svg class="w-full h-full text-brand-400 dark:text-brand-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">하 태 환</h3>
+                    <p class="text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400 mt-1">Life Explorer & Player</p>
+                    
+                    <div class="mt-4 sm:mt-6 space-y-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 w-full text-left sm:text-center">
+                        <p class="flex items-center justify-center gap-2">
+                            <i data-lucide="cake" class="w-4 h-4 text-brand-400 flex-shrink-0"></i> 2001.10.26(26세)
+                        </p>
+                        <p class="flex items-center justify-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-brand-400 flex-shrink-0"></i> 본가 창원 / 현재 부산 명지 거주
+                        </p>
+                    </div>
+
+                    <div class="w-full mt-5 pt-5 border-t border-warmgray-200 dark:border-warmgray-700 text-[11px] text-slate-400 dark:text-slate-500">
+                        💡 균형 잡힌 오프타임이 만드는 탄탄한 일상
+                    </div>
+                </div>
+            </div>
+
+            <!-- 소개 상세 설명 및 시너지 토크 (우) -->
+            <div class="md:col-span-7 space-y-5 sm:space-y-6 text-center sm:text-left">
+                <h4 class="text-lg sm:text-xl font-bold text-slate-950 dark:text-white leading-snug">
+                    "취미는 일상을 견고하게 버티게 만드는 최고의 원동력입니다."
+                </h4>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                    단순히 일상에서 소모되는 에너지를 버티는 데 그치지 않고, 내가 좋아하는 취미 영역에 깊게 뛰어들어 몰입을 즐깁니다. <br>
+                    매주 코트 위에서 흘리는 땀방울, 건반 위에서 맞추는 하모니의 짜릿함, 그리고 전장 속에서의 치밀한 두뇌 플레이까지. 이 모든 취미들의 선순환은 저를 한층 더 입체적이고 건강한 에너지로 채우는 원동력이 됩니다.
+                </p>
+
+                <!-- 강점 가치 수치 그리드 (모바일 3열 유지) -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-2 text-center">
+                    <div class="bg-warmgray-100 dark:bg-warmgray-800 p-3 sm:p-4 rounded-2xl">
+                        <span class="block text-xl sm:text-2xl">🏸</span>
+                        <span class="block text-[9px] sm:text-[11px] text-slate-400 mt-1 uppercase font-semibold">체력 & 끈기</span>
+                        <span class="block text-xs sm:text-sm font-bold mt-0.5">매주 코트</span>
+                    </div>
+                    <div class="bg-warmgray-100 dark:bg-warmgray-800 p-3 sm:p-4 rounded-2xl">
+                        <span class="block text-xl sm:text-2xl">🎹</span>
+                        <span class="block text-[9px] sm:text-[11px] text-slate-400 mt-1 uppercase font-semibold">협업 & 조화</span>
+                        <span class="block text-xs sm:text-sm font-bold mt-0.5">3회 무대</span>
+                    </div>
+                    <div class="bg-warmgray-100 dark:bg-warmgray-800 p-3 sm:p-4 rounded-2xl">
+                        <span class="block text-xl sm:text-2xl">🎮</span>
+                        <span class="block text-[9px] sm:text-[11px] text-slate-400 mt-1 uppercase font-semibold">전략 & 설계</span>
+                        <span class="block text-xs sm:text-sm font-bold mt-0.5">트릭스터</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 강점 카드 / 취미 딥다이브 섹션 (모바일에서 부드러운 스태킹 카드 변경) -->
+    <section id="strengths" class="py-16 sm:py-24 bg-warmgray-100/75 dark:bg-warmgray-800/20 reveal">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-[11px] font-bold tracking-widest text-brand-500 uppercase">PLAY GROUNDS</h2>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">태환의 3가지 스페셜 플레이</p>
+                <div class="w-8 h-1 bg-brand-400 mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                <!-- 카드 1: 배드민턴 -->
+                <div class="bg-white dark:bg-warmgray-800 p-6 sm:p-8 rounded-3xl border border-warmgray-200/60 dark:border-warmgray-700/50 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/60 text-brand-600 dark:text-brand-300 rounded-xl flex items-center justify-center mb-5 group-hover:scale-105 transition duration-300">
+                            <i data-lucide="dumbbell" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold mb-2">🏸 배드민턴</h3>
+                        <p class="text-xs text-brand-500 font-semibold mb-3">[끈기와 활력] 코트 위에 찍는 마침표</p>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            일주일에 최소 한 번 이상 코트 위에 서서 온전히 셔틀콕에만 집중하여 땀방울을 흘립니다. 꾸준한 건강 관리이자 한 주를 책임질 끈기 가득한 스태미나 충전 방식입니다.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-warmgray-100 dark:border-warmgray-700/50 flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400">
+                        <i data-lucide="check" class="w-4 h-4"></i> 매주 1회 이상 성실함 충전
+                    </div>
+                </div>
+
+                <!-- 카드 2: 피아노 -->
+                <div class="bg-white dark:bg-warmgray-800 p-6 sm:p-8 rounded-3xl border border-warmgray-200/60 dark:border-warmgray-700/50 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/60 text-brand-600 dark:text-brand-300 rounded-xl flex items-center justify-center mb-5 group-hover:scale-105 transition duration-300">
+                            <i data-lucide="music" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold mb-2">🎹 피아노</h3>
+                        <p class="text-xs text-brand-500 font-semibold mb-3">[협업과 하모니] 소리를 맞추는 조력자</p>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            학부 시절 밴드 동아리 건반 주자로 3회의 무대 경험이 있습니다. 서로 다른 소리를 내는 세션들이 연습 도중 단 한순간에 화음으로 딱 맞아떨어질 때 전율을 느끼는, 소통과 합의 달인입니다.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-warmgray-100 dark:border-warmgray-700/50 flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400">
+                        <i data-lucide="check" class="w-4 h-4"></i> 총 3회의 밴드 무대 경험
+                    </div>
+                </div>
+
+                <!-- 카드 3: 롤 -->
+                <div class="bg-white dark:bg-warmgray-800 p-6 sm:p-8 rounded-3xl border border-warmgray-200/60 dark:border-warmgray-700/50 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/60 text-brand-600 dark:text-brand-300 rounded-xl flex items-center justify-center mb-5 group-hover:scale-105 transition duration-300">
+                            <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold mb-2">🎮 리그 오브 레전드</h3>
+                        <p class="text-xs text-brand-500 font-semibold mb-3">[전략과 트릭스터] 영리한 판 짜기</p>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+                            미드 르블랑과 정글 샤코를 주로 픽합니다. 상대의 심리를 흔드는 정교한 심리전, 그리고 치밀한 한 타 타이밍 설계를 통해 팀의 승리를 책임감 있게 견인합니다.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-warmgray-100 dark:border-warmgray-700/50 flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400">
+                        <i data-lucide="check" class="w-4 h-4"></i> 미드 르블랑 & 정글 샤코 모스트
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 시너지 토크 / 선순환 철학 섹션 (CTA) -->
+    <section class="py-16 sm:py-20 max-w-5xl mx-auto px-4 sm:px-6 reveal">
+        <div class="bg-gradient-to-r from-brand-600 to-brand-500 rounded-3xl p-6 sm:p-12 text-white shadow-lg relative overflow-hidden">
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 sm:w-48 sm:h-48 bg-white/10 rounded-full filter blur-2xl pointer-events-none"></div>
+
+            <div class="max-w-3xl z-10 relative space-y-4">
+                <span class="inline-block text-[10px] sm:text-xs font-bold bg-white/20 px-3 py-1 rounded-full uppercase tracking-widest text-brand-100">
+                    My Philosophy
+                </span>
+                <h3 class="text-xl sm:text-3xl font-bold leading-snug">
+                    "온전한 휴식이 만드는 일터에서의 폭발적인 시너지"
+                </h3>
+                <p class="text-xs sm:text-base text-brand-100/90 leading-relaxed">
+                    책상 앞에 오래 앉아 있는다고 해서 답이 나오지는 않습니다. 건강한 오프타임(Off-Time)에서 얻는 체력, 소통 능력, 그리고 전략적 사고는 다시 저의 온타임(On-Time) 일상으로 돌아와 모든 문제를 깊게 해결하는 강력한 선순환 에너지를 제공합니다.
+                </p>
+                <div class="pt-2 flex flex-wrap gap-3 text-[10px] sm:text-xs font-semibold text-white/80">
+                    <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 성실함 지탱</span>
+                    <span class="flex items-center gap-1"><i data-lucide="heart-handshake" class="w-3.5 h-3.5"></i> 조화로운 협업</span>
+                    <span class="flex items-center gap-1"><i data-lucide="zap" class="w-3.5 h-3.5"></i> 몰입력 극대화</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. 게이미피케이션 (밸런스 게임) & 방명록 섹션 (모바일 그리드 재설정) -->
+    <section id="interactive" class="py-16 sm:py-24 bg-warmgray-100/75 dark:bg-warmgray-800/20 reveal">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-[11px] font-bold tracking-widest text-brand-500 uppercase">PLAY & TALK</h2>
+                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">함께 소통하는 공간</p>
+                <div class="w-8 h-1 bg-brand-400 mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+                <!-- 밸런스 게임 카드 (좌: 5열) -->
+                <div class="lg:col-span-5 bg-white dark:bg-warmgray-800 p-5 sm:p-8 rounded-3xl border border-warmgray-200/60 dark:border-warmgray-700/50 shadow-sm">
+                    <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-bold text-sm mb-4">
+                        <i data-lucide="gamepad-2" class="w-5 h-5"></i> 밸런스 게임 챌린지
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1">하태환에 대해 얼마나 아시나요?</h3>
+                    <p class="text-[11px] text-slate-400 dark:text-slate-500 mb-6">퀴즈를 맞추고 스페셜 뱃지를 획득하세요!</p>
+
+                    <!-- 퀴즈 화면 -->
+                    <div id="quiz-box" class="space-y-5">
+                        <div class="flex justify-between items-center text-xs font-bold text-slate-400">
+                            <span id="quiz-step">질문 1 / 3</span>
+                            <span class="text-brand-600 dark:text-brand-400 flex items-center gap-1">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i> 점수: <span id="quiz-score">0</span>
+                            </span>
+                        </div>
+                        <h4 id="quiz-question" class="font-bold text-slate-800 dark:text-white min-h-[48px] text-xs sm:text-sm leading-relaxed">
+                            로딩 중...
+                        </h4>
+                        <div id="quiz-options" class="space-y-2.5">
+                            <!-- JS에 의해 모바일 터치 최적화 버튼들이 주입됩니다. -->
+                        </div>
+                    </div>
+
+                    <!-- 결과 화면 -->
+                    <div id="quiz-result" class="hidden text-center py-6 space-y-4">
+                        <div class="w-14 h-14 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mx-auto text-brand-600 dark:text-brand-400">
+                            <i data-lucide="award" class="w-7 h-7"></i>
+                        </div>
+                        <h4 class="font-bold text-base sm:text-lg">퀴즈 끝!</h4>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                            최종 스코어: <span id="final-score" class="font-black text-brand-600 dark:text-brand-400">0</span> / 100점
+                        </p>
+                        <p id="badge-text" class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 px-2"></p>
+                        <button onclick="restartQuiz()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition active:scale-95">
+                            다시 도전하기
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 방명록 보드 (우: 7열) -->
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="bg-white dark:bg-warmgray-800 p-5 sm:p-8 rounded-3xl border border-warmgray-200/60 dark:border-warmgray-700/50 shadow-sm">
+                        <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-bold text-sm mb-4">
+                            <i data-lucide="message-square" class="w-5 h-5"></i> 롤링페이퍼 방명록
+                        </div>
+                        
+                        <!-- 방명록 등록 폼 -->
+                        <form id="guestbook-form" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="sm:col-span-1">
+                                    <input type="text" id="guest-name" required placeholder="이름/닉네임" class="w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-warmgray-200 dark:border-warmgray-700 bg-transparent focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <input type="text" id="guest-message" required placeholder="태환 님께 한마디를 남겨주세요." class="w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-warmgray-200 dark:border-warmgray-700 bg-transparent focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all">
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="w-full sm:w-auto px-5 py-3 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95">
+                                    작성하기 <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- 등록된 롤링페이퍼 목록 (모바일 친화 스크롤) -->
+                    <div class="space-y-3 max-h-[300px] overflow-y-auto pr-1" id="comments-container">
+                        <!-- JS에서 동적으로 데이터 매핑 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. 푸터 영역 -->
+    <footer class="bg-warmgray-200 dark:bg-warmgray-950 py-10 text-center text-slate-500 dark:text-slate-400 border-t border-warmgray-300 dark:border-warmgray-900 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <p class="text-sm font-bold text-brand-600 dark:text-brand-400 flex items-center gap-1.5 justify-center md:justify-start">
+                    <span class="w-2 h-2 bg-brand-500 rounded-full"></span> HA TAE HWAN
+                </p>
+                <p class="text-xs text-slate-400 mt-1">© 2026 Ha Tae Hwan. All rights reserved.</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="mailto:your_email@domain.com" class="p-3 bg-warmgray-100 dark:bg-warmgray-900 hover:bg-brand-500 hover:text-white rounded-full transition active:scale-95" aria-label="이메일 전송">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                </a>
+                <a href="https://github.com" target="_blank" class="p-3 bg-warmgray-100 dark:bg-warmgray-900 hover:bg-brand-500 hover:text-white rounded-full transition active:scale-95" aria-label="깃허브 방문">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 9. 토스트 알림 메시지 레이어 -->
+    <div id="toast" class="fixed bottom-6 right-6 left-6 sm:left-auto px-4 py-3 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-2xl shadow-xl flex items-center justify-center sm:justify-start gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-50 text-xs font-semibold">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+        <span id="toast-text">알림 메시지</span>
+    </div>
+
+</body>
+</html>

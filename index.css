@@ -1,0 +1,38 @@
+/* 폰트 및 모션 트랜지션 기본 설정 */
+body {
+    font-family: 'Pretendard', sans-serif;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    /* 모바일 가로스크롤 및 드래그 바운스 방지 */
+    overflow-x: hidden;
+}
+
+/* 스크롤 감지 페이드업 애니메이션 클래스 */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 방명록 목록 모바일 스크롤 스킨 */
+#comments-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+#comments-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#comments-container::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 122, 96, 0.4);
+    border-radius: 10px;
+}
+
+/* 모바일 탭 포커스 링 투명화 (사용성 향상) */
+button, a {
+    -webkit-tap-highlight-color: transparent;
+}
